@@ -74,13 +74,13 @@
             'pk.eyJ1IjoiamFrb2J6aGFvIiwiYSI6ImNpcms2YWsyMzAwMmtmbG5icTFxZ3ZkdncifQ.P9MBej1xacybKcDN_jehvw';
         let map = new mapboxgl.Map({
             container: 'map', // container ID
-            style: 'mapbox://styles/mapbox/dark-v10',
+            style: 'mapbox://styles/mapbox/light-v10',
             zoom: 5, // starting zoom
             minZoom: 4, // minimum zoom level of the map
-            center: [138, 38] // starting center
+            center: [-100, 41 ] // starting center
         });
-        const grades = [4, 5, 6],
-            colors = ['rgb(208,209,230)', 'rgb(103,169,207)', 'rgb(1,108,89)'],
+        const grades = [1000, 10000, 50000],
+            colors = ['rgb(236,231,242)', 'rgb(166,189,219)', 'rgb(43,140,190)'],
             radii = [5, 15, 20];
         //load data to the map as new layers.
         //map.on('load', function loadingData() {
@@ -99,7 +99,7 @@
                 'paint': {
                     // increase the radii of the circle as mag value increases
                     'circle-radius': {
-                        'property': 'mag',
+                        'property': 'cases',
                         'stops': [
                             [grades[0], radii[0]],
                             [grades[1], radii[1]],
@@ -108,7 +108,7 @@
                     },
                     // change the color of the circle as mag value increases
                     'circle-color': {
-                        'property': 'mag',
+                        'property': 'cases',
                         'stops': [
                             [grades[0], colors[0]],
                             [grades[1], colors[1]],
@@ -124,14 +124,14 @@
             map.on('click', 'covidcounts-point', (event) => {
                 new mapboxgl.Popup()
                     .setLngLat(event.features[0].geometry.coordinates)
-                    .setHTML(`<strong>Magnitude:</strong> ${event.features[0].properties.mag}`)
+                    .setHTML(`<strong>Covid Cases:</strong> ${event.features[0].properties.cases}`)
                     .addTo(map);
             });
         });
         // create legend
         const legend = document.getElementById('legend');
         //set up legend grades and labels
-        var labels = ['<strong>Magnitude</strong>'],
+        var labels = ['<strong>Covid Cases</strong>'],
             vbreak;
         //iterate through grades and create a scaled circle and label for each
         for (var i = 0; i < grades.length; i++) {
@@ -142,14 +142,15 @@
             labels.push(
                 '<p class="break"><i class="dot" style="background:' + colors[i] + '; width: ' + dot_radii +
                 'px; height: ' +
-                dot_radii + 'px; "></i> <span class="dot-label" style="top: ' + dot_radii / 2 + 'px;">' + vbreak +
+                dot_radii + 'px; "></i> <span class="dot-label" style="top: ' + dot_radii / 2 + 'px; font-size: 12px;">' + vbreak +
                 '</span></p>');
         }
         // add the data source
         const source =
-            '<p style="text-align: right; font-size:10pt">Source: <a href="https://earthquake.usgs.gov/earthquakes/">USGS</a></p>';
+            '<p style="text-align: right; font-size:10pt">Source: <a href="https://github.com/nytimes/covid-19-data/blob/43d32dde2f87bd4dafbb7d23f5d9e878124018b8/live/us-counties.csv">The New York Times</a></p>';
         // combine all the html codes.
         legend.innerHTML = labels.join('') + source;
+
     </script>
 
 </body>
